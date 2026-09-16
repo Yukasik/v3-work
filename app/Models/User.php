@@ -22,6 +22,17 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
+    protected $fillable = [
+    'name',
+    'lastname',
+    'middlename',
+    'tel',
+    'login',
+    'email',
+    'password',
+    'role',
+    ];
+
     /**
      * Get the attributes that should be cast.
      *
