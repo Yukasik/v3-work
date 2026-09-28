@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Zone;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ZoneController extends Controller
 {
@@ -12,7 +13,14 @@ class ZoneController extends Controller
      */
     public function index()
     {
-        //
+        $zones = Zone::all();
+        return view('dashboard', compact('zones'));
+    }
+
+    public function myZone()
+    {
+        $zones = Zone::where('user_id', Auth::id())->get();
+        return view('books.index', compact('zones'));
     }
 
     /**

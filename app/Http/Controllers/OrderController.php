@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Zone;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -12,7 +14,9 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        $orders = Order::where('user_id', Auth::id())->with('zone')->get();
+        return view('orders.index', compact('orders'));
+
     }
 
     /**
@@ -20,7 +24,8 @@ class OrderController extends Controller
      */
     public function create()
     {
-        //
+        $zones=Zone::all();
+        return view('orders.create', compact('zones'));
     }
 
     /**
@@ -28,7 +33,16 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $date=$request->validate([
+            'count' => ['required', 'integer', 'max:225'],
+            'potvergdenie' => ['required', 'string', 'max:225'],
+            'comment' => ['nullable', 'string', 'max:225'],
+            'zone_id' => ['required', 'exists:zones,id'],
+        ]);
+
+        $date['user_id']=Auth::id();
+        Order::create($date);
+        return redirect()->route('order.index');
     }
 
     /**
